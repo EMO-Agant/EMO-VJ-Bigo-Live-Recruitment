@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>EMO AGENCY – ສະໝັກ VJ Bigo Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS – White × Gold Luxury
+══════════════════════════════════════════════ */
+:root {
+  --gold:        #C9A84C;
+  --gold-light:  #E8C97A;
+  --gold-dark:   #8B6914;
+  --gold-shine:  #F5DFA0;
+  --white:       #FFFFFF;
+  --off-white:   #FAF8F3;
+  --cream:       #FDF6E3;
+  --text-dark:   #1A1208;
+  --text-mid:    #4A3B1A;
+  --text-muted:  #8B7355;
+  --border:      #E8C97A40;
+  --shadow-gold: 0 4px 24px rgba(201,168,76,0.18);
+  --shadow-card: 0 2px 16px rgba(0,0,0,0.07);
+  --radius:      16px;
+  --radius-sm:   10px;
+  --font-lao:    'Noto Sans Lao', sans-serif;
+  --font-display:'Playfair Display', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: var(--font-lao);
+  background: var(--off-white);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 40%, var(--gold-shine) 60%, var(--gold) 80%, var(--gold-dark) 100%);
+}
+.gold-text {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 2px solid var(--gold);
+  box-shadow: var(--shadow-gold);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-shine));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+  font-family: var(--font-display);
+  box-shadow: 0 2px 8px rgba(201,168,76,0.4);
+  overflow: hidden;
+}
+.logo-text { line-height: 1.1; }
+.logo-text .main {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1.5px;
+}
+.logo-text .sub {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: all .25s;
+}
+
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+}
+.drawer-overlay.open { display: block; }
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 280px;
+  height: 100%;
+  background: var(--white);
+  z-index: 201;
+  transition: right .3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 32px rgba(0,0,0,0.15);
+}
+.drawer.open { right: 0; }
+.drawer-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--white);
+  position: relative;
+}
+.drawer-header h3 { font-family: var(--font-display); font-size: 18px; letter-spacing: 1px; }
+.drawer-header p { font-size: 11px; opacity: .8; margin-top: 2px; }
+.drawer-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 22px;
+  cursor: pointer;
+}
+.drawer-body { flex: 1; padding: 20px; }
+.drawer-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .2s;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.drawer-menu-item:hover { background: var(--cream); }
+.drawer-menu-item .icon { font-size: 20px; }
+
+#page-home { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+
+.hero-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #1A0A00 0%, #2D1500 30%, #4A2800 60%, #2D1500 80%, #1A0A00 100%);
+  padding: 36px 20px 32px;
+  text-align: center;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.10) 0%, transparent 60%);
+}
+.hero-stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--gold-shine);
+  border-radius: 50%;
+  animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle { from { opacity: .2; transform: scale(1); } to { opacity: 1; transform: scale(1.5); } }
+.hero-content { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-shine) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.hero-subtitle { font-size: 13px; color: var(--gold-light); letter-spacing: 1.5px; margin-bottom: 16px; }
+.hero-divider { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 12px 0; }
+.hero-divider::before, .hero-divider::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.hero-divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+.hero-divider-icon { font-size: 14px; }
+.hero-desc { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.8; max-width: 300px; margin: 0 auto 20px; }
+.hero-income {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 12px;
+  padding: 8px 18px;
+  color: var(--gold-light);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.conditions-card {
+  margin: 16px 14px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.card-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #FFF9EE, #FFF3D0);
+}
+.card-header-icon { font-size: 20px; }
+.card-header h3 { font-size: 15px; font-weight: 700; color: var(--gold-dark); }
+.conditions-list { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; list-style: none; }
+.conditions-list li { display: flex; gap: 10px; font-size: 12.5px; line-height: 1.6; color: var(--text-mid); }
+.cond-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.income-banner {
+  margin: 0 14px 16px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #0D0800, #2A1800, #0D0800);
+  border: 1px solid var(--gold);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.income-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.income-label { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 1px; text-transform: uppercase; }
+.income-value {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, var(--gold), var(--gold-shine));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.income-sub { font-size: 10px; color: var(--gold-light); margin-top: -8px; }
+.income-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+.perks-row { display: flex; gap: 8px; margin: 0 14px 16px; }
+.perk-card {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.perk-icon { font-size: 22px; margin-bottom: 6px; }
+.perk-label { font-size: 10.5px; color: var(--text-mid); line-height: 1.4; font-weight: 500; }
+
+.apply-cta { margin: 0 14px 20px; }
+.btn-apply {
+  width: 100%;
+  padding: 17px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 40%, var(--gold-shine) 60%, var(--gold) 80%, var(--gold-dark) 100%);
+  background-size: 200% 100%;
+  color: var(--white);
+  font-family: var(--font-lao);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.45);
+  animation: shimmer 3s ease infinite;
+  transition: transform .15s, box-shadow .15s;
+}
+.btn-apply:active { transform: scale(.98); box-shadow: 0 2px 10px rgba(201,168,76,0.3); }
+@keyframes shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.contact-strip {
+  margin: 0 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.contact-strip .icon { font-size: 28px; }
+.contact-info .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.contact-info .number { font-size: 18px; font-weight: 800; color: var(--gold-dark); }
+.contact-info .platform { font-size: 10px; color: var(--text-muted); }
+
+#page-form { max-width: 480px; margin: 0 auto; padding: 0 14px 100px; }
+.form-hero { text-align: center; padding: 24px 0 16px; }
+.form-hero h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.form-hero p { font-size: 12px; color: var(--text-muted); }
+
+.progress-wrap { margin: 0 0 20px; }
+.progress-steps { display: flex; justify-content: center; gap: 0; position: relative; }
+.progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: calc(50% - 84px);
+  right: calc(50% - 84px);
+  height: 2px;
+  background: var(--border);
+}
+.progress-line-fill {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: calc(50% - 84px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  transition: width .4s ease;
+  width: 0;
+}
+.p-step { display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 1; width: 80px; }
+.p-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #E8DFC8;
+  border: 2px solid #D4C49A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all .3s;
+}
+.p-step.done .p-step-dot {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border-color: var(--gold);
+  color: var(--white);
+}
+.p-step.active .p-step-dot {
+  background: var(--white);
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.2);
+}
+.p-step-label { font-size: 9.5px; color: var(--text-muted); font-weight: 500; text-align: center; }
+.p-step.active .p-step-label { color: var(--gold-dark); font-weight: 700; }
+
+.form-step { display: none; }
+.form-step.active { display: block; }
+.form-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  padding: 20px 18px;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.field-group { display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--text-mid); display: flex; align-items: center; gap: 4px; }
+.field label .req { color: #E53935; }
+.field-hint { font-size: 10px; color: var(--text-muted); }
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #E0D5B8;
+  border-radius: var(--radius-sm);
+  background: var(--off-white);
+  color: var(--text-dark);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  background: var(--white);
+}
+.field input.error, .field select.error { border-color: #E53935; }
+.error-msg { font-size: 11px; color: #E53935; display: none; }
+.error-msg.show { display: block; }
+.field select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B6914' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.bigo-box {
+  background: linear-gradient(135deg, #FFF9EE, #FFF3D0);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.bigo-box h4 { font-size: 12px; font-weight: 700; color: var(--gold-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.bigo-box ol { padding-left: 16px; font-size: 11.5px; color: var(--text-mid); line-height: 1.8; }
+
+.form-nav { display: flex; gap: 10px; margin-top: 6px; }
+.btn-back {
+  flex: 1;
+  padding: 14px;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--gold-dark);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-back:active { background: var(--cream); }
+.btn-next, .btn-submit {
+  flex: 2;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  background-size: 200%;
+  color: var(--white);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(201,168,76,0.4);
+  transition: transform .15s;
+}
+.btn-next:active, .btn-submit:active { transform: scale(.97); }
+.btn-submit { background: linear-gradient(135deg, #1A7A1A, #28A428); }
+
+.success-screen { display: none; text-align: center; padding: 40px 20px 80px; max-width: 480px; margin: 0 auto; }
+.success-screen.show { display: block; }
+.success-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 32px rgba(201,168,76,0.4);
+  animation: successPop .5s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes successPop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-screen h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.success-screen p { font-size: 13px; color: var(--text-mid); line-height: 1.8; margin-bottom: 24px; }
+.seq-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 800;
+  padding: 10px 24px;
+  border-radius: 30px;
+  margin-bottom: 24px;
+  font-family: var(--font-display);
+}
+.btn-home {
+  display: inline-block;
+  padding: 14px 32px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--white);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#page-admin { max-width: 900px; margin: 0 auto; padding: 16px 14px 80px; }
+.admin-login {
+  max-width: 340px;
+  margin: 60px auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-gold);
+  padding: 28px 24px;
+  text-align: center;
+}
+.admin-login h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.admin-login p { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.admin-login input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #E0D5B8;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.admin-login input:focus { border-color: var(--gold); }
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--white);
+  font-family: var(--font-lao);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.admin-dash { display: none; }
+.admin-dash.show { display: block; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.stat-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+.admin-toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.admin-toolbar input {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1.5px solid #E0D5B8;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-lao);
+  font-size: 13px;
+  outline: none;
+}
+.admin-toolbar input:focus { border-color: var(--gold); }
+.admin-toolbar select {
+  padding: 10px 12px;
+  border: 1.5px solid #E0D5B8;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-lao);
+  font-size: 13px;
+  outline: none;
+  background: var(--white);
+}
+
+.applicant-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+  transition: transform .15s;
+}
+.applicant-card:active { transform: scale(.99); }
+.ac-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.ac-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+.ac-nickname { font-size: 11px; color: var(--text-muted); }
+.status-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 12px; white-space: nowrap; }
+.status-new  { background: #EEF8FF; color: #1565C0; border: 1px solid #90CAF9; }
+.status-pass { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+.status-fail { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+.status-wait { background: #FFF8E1; color: #E65100; border: 1px solid #FFE082; }
+.ac-info { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.ac-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-mid);
+  background: var(--off-white);
+  padding: 3px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.ac-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.ac-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid;
+  font-family: var(--font-lao);
+  transition: opacity .15s;
+}
+.ac-btn:active { opacity: .75; }
+.ac-btn-pass   { background: #E8F5E9; color: #2E7D32; border-color: #A5D6A7; }
+.ac-btn-fail   { background: #FFEBEE; color: #C62828; border-color: #EF9A9A; }
+.ac-btn-wait   { background: #FFF8E1; color: #E65100; border-color: #FFE082; }
+.ac-btn-delete { background: #FAFAFA; color: #757575; border-color: #E0E0E0; }
+.ac-date { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text-dark);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform .3s ease;
+  max-width: 90vw;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.gold { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 2px solid var(--gold);
+  display: flex;
+  z-index: 90;
+  box-shadow: 0 -4px 20px rgba(201,168,76,0.12);
+}
+.bn-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px 8px;
+  cursor: pointer;
+  transition: background .15s;
+  background: none;
+  border: none;
+  font-family: var(--font-lao);
+}
+.bn-item:active { background: var(--cream); }
+.bn-item.active-nav .bn-icon { color: var(--gold-dark); }
+.bn-item.active-nav .bn-label { color: var(--gold-dark); font-weight: 700; }
+.bn-icon { font-size: 20px; color: var(--text-muted); transition: color .2s; }
+.bn-label { font-size: 9px; color: var(--text-muted); transition: color .2s; }
+
+@media (min-width: 600px) {
+  .header-inner { max-width: 900px; }
+  #page-admin   { padding: 24px 24px 80px; }
+  .stats-grid   { grid-template-columns: repeat(5, 1fr); }
+  .bottom-nav   { display: none; }
+  .admin-header-actions { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; justify-content: space-between; }
+}
+@media (max-width: 599px) {
+  .admin-header-actions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+}
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; }
+.empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+.spinner-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.spinner-overlay.show { display: flex; }
+.spinner-overlay .big-spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+.spinner-overlay p { font-size: 13px; color: var(--text-mid); }
+</style>
+</head>
+<body>
+
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="big-spinner"></div>
+  <p>ກຳລັງດຳເນີນການ...</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo-icon" id="logoIcon">E</div>
+      <div class="logo-text">
+        <div class="main">EMO AGENCY</div>
+        <div class="sub">VJ Bigo Live Recruitment</div>
+      </div>
+    </div>
+    <button class="hamburger" onclick="openDrawer()" aria-label="ເມນູ">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<nav class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <div class="drawer-header">
+    <h3>EMO AGENCY</h3>
+    <p>ລະບົບຄັດເລືອກ VJ Bigo Live</p>
+  </div>
+  <div class="drawer-body">
+    <button class="drawer-menu-item" onclick="goPage('home');closeDrawer()"><span class="icon">🏠</span> ໜ້າຫຼັກ</button>
+    <button class="drawer-menu-item" onclick="goPage('form');closeDrawer()"><span class="icon">📝</span> ສະໝັກ VJ</button>
+    <button class="drawer-menu-item" onclick="goPage('status');closeDrawer()"><span class="icon">📊</span> ກວດສອບສະຖານະ</button>
+    <button class="drawer-menu-item" onclick="goPage('admin');closeDrawer()"><span class="icon">🔐</span> ລະບົບ Admin</button>
+    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0"/>
+    <div style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px">
+      📞 020 5449 9925<br/>
+      <span style="font-size:10px">BIGO ID: EMO_PHONE</span>
+    </div>
+  </div>
+</nav>
+
+<div class="page active" id="page-home">
+  <div class="hero-banner">
+    <div class="hero-stars" id="heroStars"></div>
+    <div class="hero-content">
+      <div class="hero-badge">★ EMO Family ★</div>
+      <div class="hero-title">EMO<br/>AGENCY</div>
+      <div class="hero-subtitle">VJ BIGO LIVE RECRUITMENT</div>
+      <div class="hero-divider"><span class="hero-divider-icon">💎</span></div>
+      <div class="hero-desc">ຮ່ວມເປັນສ່ວນໜຶ່ງຂອງ EMO Family<br/>ລາຍໄດ້ດີ · ປຶກສາໄດ້ 24/7 · ຊ່ວຍທຸກຂັ້ນຕອນ</div>
+      <div class="hero-income"><span>💰</span><span>ລາຍໄດ້ 5 – 60 ລ້ານ / ເດືອນ</span></div>
+    </div>
+  </div>
+
+  <div style="padding: 16px 14px 0">
+    <div class="income-banner">
+      <div class="income-row">
+        <div>
+          <div class="income-label">ລາຍໄດ້ຕໍ່ຄືນ</div>
+          <div class="income-value">1 – 2 ລ້ານ</div>
+          <div class="income-sub">ຂຶ້ນຢູ່ກັບຜົນງານ</div>
+        </div>
+        <div style="text-align:right">
+          <div class="income-label">ລາຍໄດ້ຕໍ່ເດືອນ</div>
+          <div class="income-value">5 – 60 ລ້ານ</div>
+          <div class="income-sub">ກີບລາວ</div>
+        </div>
+      </div>
+      <div class="income-divider"></div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.55);text-align:center">💎 ໄດ້ລາຍຮັບຕໍ່ຍອດ · ສະໝັກຟຣີ · ບໍ່ມີຄ່າໃຊ້ຈ່າຍ</div>
+    </div>
+  </div>
+
+  <div class="perks-row" style="padding:0 14px;margin:0 0 16px">
+    <div class="perk-card"><div class="perk-icon">🆓</div><div class="perk-label">ສະໝັກ<br/>ຟຣີ</div></div>
+    <div class="perk-card"><div class="perk-icon">🎓</div><div class="perk-label">ສອນ<br/>ທຸກຢ່າງ</div></div>
+    <div class="perk-card"><div class="perk-icon">💎</div><div class="perk-label">ວຽກເສີມ ລາຍໄດ້<br/>ດີ</div></div>
+    <div class="perk-card"><div class="perk-icon">📱</div><div class="perk-label">ສະໜັບ<br/>ສະໜູນ</div></div>
+  </div>
+
+  <div class="apply-cta" style="padding:0 14px">
+    <button class="btn-apply" onclick="goPage('form')">✨ ສະໝັກ VJ ດຽວນີ້ ✨</button>
+  </div>
+
+  <div class="conditions-card" style="margin:0 14px 16px">
+    <div class="card-header"><span class="card-header-icon">📋</span><h3>ເງື່ອນໄຂ ແລະ ລາຍລະອຽດ</h3></div>
+    <ul class="conditions-list">
+      <li><span class="cond-num">1</span><span>ຢາກໃຫ້ມາດ້ວຍຄວາມຕັ້ງໃຈຢາກຫາເງິນໃຫ້ກັບຕົນເອງ ສ້າງເນື້ອສ້າງໂຕ</span></li>
+      <li><span class="cond-num">2</span><span>ມາໄລ້ດ້ວຍຄວາມຕັ້ງໃຈ ແລະ ຂະຫຍັນ ອົດທົນ ໄລ້ສະຫມ່ຳສະເຫມີ ກາລັນຕີໄດ້ຍອດໄດ້ເງິນແທ້ ຫລັກລ້ານ-60ລ້ານ/ເດືອນ</span></li>
+      <li><span class="cond-num">3</span><span>ອາຍຸຕ້ອງຄົບ <strong>18 ປີ</strong> ຂຶ້ນໄປ</span></li>
+      <li><span class="cond-num">4</span><span>ຕ້ອງເປັນຄົນລາວ ຫຼື ໄທ ທີ່ຢູ່ໃນປະເທດລາວ ຫຼື ໄທ ຈຶ່ງສະຫມັກໄດ້</span></li>
+      <li><span class="cond-num">5</span><span>ຂໍສະຫມັກເຂົ້າຟຣີ ສັງກັດບໍ່ຄິດຄ່າສະຫມັກໃດໆ, ສອນໃຫ້ຟຣີ</span></li>
+      <li><span class="cond-num">6</span><span>ຕ້ອງເຂົ້າຟັງເທຣນ ຫຼື ຮັບການສອນຈາກຫົວສັງກັດ ຈຶ່ງຈະໄລ້ໄດ້ມີປະສິດທິພາບ, ເກັ່ງ ແລະ ໄລ້ແບບມີເປົ້າຫມາຍ</span></li>
+      <li><span class="cond-num">7</span><span>ສິ່ງທີ່ວີເຈຈະໄດ້ຮັບ ມີໂບນັດຈາກແອປ ໂບນັດຂະຫຍັນ ໂບນັດວີເຈໃຫມ່ ໂບນັດວີເຈເກົ່າ ໂບນັດເຕີມໂຕ ໂບນັັດຈາກກິດຈະກຳແອປ ສັງກັດຊັບພອດ ໂບນັດກິດຈະກຳສັງກັດ ໂບນັດຂະຫຍັນ ຂອງແຈກ ຫຼື ລາງວັນ ແລະ ມີສິດເຂົ້າຮ່ວມງານລ້ຽງປະຈຳປີ</span></li>
+    </ul>
+  </div>
+
+  <div class="contact-strip" style="margin:0 14px 80px">
+    <div class="icon">📱</div>
+    <div class="contact-info">
+      <div class="label">ຕິດຕໍ່ WhatsApp</div>
+      <div class="number">020 5449 9925</div>
+      <div class="platform">BIGO ID: EMO_PHONE · TikTok: @COF_EMO_P</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-form">
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✅</div>
+    <h2>ສຳເລັດແລ້ວ!</h2>
+    <p>ຂ້ອຍໄດ້ຮັບຂໍ້ມູນຂອງທ່ານແລ້ວ<br/>ທີມງານ EMO Family ຈະຕິດຕໍ່ຫາທ່ານໂດຍໄວ 💫</p>
+    <div class="seq-badge" id="seqDisplay">#001</div>
+    <p style="font-size:11px;color:var(--text-muted);margin-bottom:20px">ຕິດຕໍ່ຫາເຮົາ: WA 020 5449 9925</p>
+    <button class="btn-home" onclick="goPage('home')">🏠 ກັບໜ້າຫຼັກ</button>
+  </div>
+
+  <div id="formWrapper">
+    <div class="form-hero">
+      <h2>ສະໝັກ VJ Bigo Live</h2>
+      <p>ຂໍ້ມູນຈະຖືກສົ່ງໄປຍັງລະບົບໂດຍກົງ</p>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-steps" style="position:relative">
+        <div class="progress-line-fill" id="progressFill"></div>
+        <div class="p-step active" id="step-dot-1"><div class="p-step-dot">1</div><div class="p-step-label">ຂໍ້ມູນ<br/>ສ່ວນຕົວ</div></div>
+        <div class="p-step" id="step-dot-2"><div class="p-step-dot">2</div><div class="p-step-label">ການ<br/>ຕິດຕໍ່</div></div>
+        <div class="p-step" id="step-dot-3"><div class="p-step-dot">3</div><div class="p-step-label">Bigo<br/>Live</div></div>
+      </div>
+    </div>
+
+    <div class="form-step active" id="formStep1" style="padding:0 0 10px">
+      <div class="form-section">
+        <div class="section-title">👤 ຂໍ້ມູນສ່ວນຕົວ</div>
+        <div class="field-group">
+          <div class="field">
+            <label>ຊື່ແທ້ (ພາສາລາວ) <span class="req">*</span></label>
+            <div class="field-hint">ຕົວຢ່າງ: ອັກຄໍ ເທດພະອົງ</div>
+            <input type="text" id="fullName" placeholder="ໃສ່ຊື່ແທ້ຂອງທ່ານ"/>
+            <div class="error-msg" id="err-fullName">ກະລຸນາໃສ່ຊື່ແທ້</div>
+          </div>
+          <div class="field">
+            <label>ຊື່ທ່ຽມ (ພາສາລາວ) <span class="req">*</span></label>
+            <div class="field-hint">ຕົວຢ່າງ: ໄຂ</div>
+            <input type="text" id="nickname" placeholder="ຊື່ທ່ຽມ"/>
+            <div class="error-msg" id="err-nickname">ກະລຸນາໃສ່ຊື່ທ່ຽມ</div>
+          </div>
+          <div class="field">
+            <label>ອາຍຸ (ປີ) <span class="req">*</span></label>
+            <input type="number" id="age" placeholder="ໃສ່ອາຍຸຂອງທ່ານ" min="18" max="99" inputmode="numeric"/>
+            <div class="error-msg" id="err-age">ກະລຸນາໃສ່ອາຍຸ (ຕ້ອງ 18 ປີ ຂຶ້ນໄປ)</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-nav" style="padding:0"><button class="btn-next" style="flex:1" onclick="nextStep(1)">ຕໍ່ໄປ →</button></div>
+    </div>
+
+    <div class="form-step" id="formStep2" style="padding:0 0 10px">
+      <div class="form-section">
+        <div class="section-title">📞 ການຕິດຕໍ່ ແລະ ທີ່ຢູ່</div>
+        <div class="field-group">
+          <div class="field">
+            <label>ເບີໂທ (ໃຊ້ WhatsApp ໄດ້) <span class="req">*</span></label>
+            <div class="field-hint">ຕົວຢ່າງ: 02055643232</div>
+            <input type="tel" id="phone" placeholder="020XXXXXXXX"/>
+            <div class="error-msg" id="err-phone">ກະລຸນາໃສ່ເບີໂທ</div>
+          </div>
+          <div class="field">
+            <label>ແຂວງ <span class="req">*</span></label>
+            <select id="province">
+              <option value="">ເລືອກແຂວງ</option>
+              <option>ນະຄອນຫຼວງວຽງຈັນ</option><option>ວຽງຈັນ</option><option>ບໍລິຄຳໄຊ</option>
+              <option>ຄຳມ່ວນ</option><option>ສະຫວັນນະເຂດ</option><option>ສາລະວັນ</option>
+              <option>ຈຳປາສັກ</option><option>ເຊກອງ</option><option>ອັດຕະປື</option>
+              <option>ຫຼວງພະບາງ</option><option>ຊຽງຂວາງ</option><option>ຫົວພັນ</option>
+              <option>ຜົ້ງສາລີ</option><option>ລວ້ນໍ້າທາ</option><option>ບໍ່ແກ້ວ</option>
+              <option>ອຸດົມໄຊ</option><option>ໄຊຍະບູລີ</option><option>ຫຼວງນໍ້າທາ</option><option>ອື່ນໆ</option>
+            </select>
+            <div class="error-msg" id="err-province">ກະລຸນາເລືອກແຂວງ</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-nav" style="padding:0">
+        <button class="btn-back" onclick="prevStep(2)">← ກັບ</button>
+        <button class="btn-next" onclick="nextStep(2)">ຕໍ່ໄປ →</button>
+      </div>
+    </div>
+
+    <div class="form-step" id="formStep3" style="padding:0 0 10px">
+      <div class="bigo-box">
+        <h4>📱 ວິທີຕິດຕາມ ລໍຖ້າ</h4>
+        <ol>
+          <li>ດາວໂຫຼດ Bigo Live ຈາກ App Store ຫຼື Play Store</li>
+          <li>ຕິດຕາມ ແລະ ເຊັນ-ໃນ ໃຫ້ ລໍຖ້າ ທີ່ EMO ເຊັນ-ຈາກ Bigo</li>
+          <li>ຊ່ວຍ ຕ້ອງ ຕໍ່ Acc ສ່ວນຕົວ ຢ່າງ ລ​ ຊ​ ໄດ້ ໃຫ້ ທ່ານ</li>
+          <li>ຊ​ ຊ​ ຊ​ ຊ​ ກ​ ໃຫ້ ທ​ ໄດ້</li>
+        </ol>
+      </div>
+      <div class="form-section">
+        <div class="section-title">🎬 ຂໍ້ມູນ Bigo Live</div>
+        <div class="field-group">
+          <div class="field">
+            <label>ດາວໂຫຼດ Bigo Live ແລ້ວ ຫຼືຍັງ?</label>
+            <select id="bigoDownloaded">
+              <option value="">ເລືອກ</option>
+              <option value="yes">ດາວໂຫຼດແລ້ວ ✅</option>
+              <option value="no">ຍັງບໍ່ທັນ ❌</option>
+              <option value="have">ມີ Account ແລ້ວ 🎯</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Bigo ID (ຖ້າມີ)</label>
+            <div class="field-hint">ຕິດຕາມ ID: EMO_PHONE ໄວ</div>
+            <input type="text" id="bigoId" placeholder="Bigo ID ຂອງທ່ານ"/>
+          </div>
+          <div style="background:var(--off-white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+            <p style="font-size:11px;color:var(--text-muted)">📌 ຫຼັງຈາກດາວໂຫຼດ Bigo Live ໃຫ້:</p>
+            <p style="font-size:12px;color:var(--gold-dark);font-weight:700;margin-top:4px">ຊອກຫາ ID: <strong>EMO_PHONE</strong></p>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:4px">ຕິດຕາມ ແລ້ວ ສົ່ງຂໍ້ຄວາມຫາ Admin</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-nav" style="padding:0">
+        <button class="btn-back" onclick="prevStep(3)">← ກັບ</button>
+        <button class="btn-submit" onclick="submitForm()">✅ ສົ່ງໃບສະໝັກ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-admin">
+  <div class="admin-login" id="adminLogin">
+    <div style="font-size:36px;margin-bottom:12px">🔐</div>
+    <h2>Admin Login</h2>
+    <p>ໃສ່ລະຫັດຜ່ານເພື່ອເຂົ້າລະບົບ</p>
+    <input type="password" id="adminPass" placeholder="ລະຫັດຜ່ານ" onkeydown="if(event.key==='Enter')adminLogin()"/>
+    <button class="btn-login" onclick="adminLogin()">🔓 ເຂົ້າລະບົບ</button>
+    <p id="loginError" style="color:#E53935;font-size:12px;margin-top:10px;display:none">ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ</p>
+  </div>
+
+  <div class="admin-dash" id="adminDash">
+    <div class="admin-header-actions">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:20px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Dashboard</h2>
+        <p style="font-size:11px;color:var(--text-muted)">EMO AGENCY – ລະບົບຄັດເລືອກ VJ</p>
+      </div>
+      <button onclick="loadAdminData()" style="padding:8px 16px;border:1px solid var(--gold);background:var(--white);border-radius:var(--radius-sm);color:var(--gold-dark);font-family:var(--font-lao);font-size:12px;cursor:pointer">🔄 ໂຫຼດຂໍ້ມູນ</button>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">🖼️ ປ່ຽນຮູບໂລໂກ້</div>
+      <div class="field-group">
+        <div class="field">
+          <label>ລິ້ງຮູບໂລໂກ້</label>
+          <div class="field-hint">ວາງລິ້ງຮູບ (Google Drive ຫຼື ລິ້ງຮູບອື່ນໆ) — ສຳລັບ Google Drive ຕ້ອງເປັນລິ້ງແບບ "ແບ່ງປັນສາທາລະນະ"</div>
+          <input type="text" id="logoUrlInput" placeholder="https://..."/>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:60px;height:60px;border-radius:50%;border:1.5px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--off-white);flex-shrink:0">
+            <img id="logoPreview" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
+            <span id="logoPreviewPlaceholder" style="font-size:11px;color:var(--text-muted)">ບໍ່ມີ</span>
+          </div>
+          <button class="ac-btn ac-btn-pass" style="flex:1;padding:10px" onclick="saveLogoUrl()">💾 ບັນທຶກໂລໂກ້</button>
+          <button class="ac-btn ac-btn-delete" style="padding:10px" onclick="resetLogo()">↩️ ຄ່າເລີ່ມຕົ້ນ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">ທັງໝົດ</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-today">–</div><div class="stat-label">ມື້ນີ້</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-new">–</div><div class="stat-label">ໃໝ່</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-pass">–</div><div class="stat-label">ຜ່ານ</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-fail">–</div><div class="stat-label">ບໍ່ຜ່ານ</div></div>
+    </div>
+
+    <div class="admin-toolbar">
+      <input type="text" id="searchInput" placeholder="🔍 ຄົ້ນຫາຊື່, ເບີໂທ..." oninput="filterApplicants()"/>
+      <select id="statusFilter" onchange="filterApplicants()">
+        <option value="">ທຸກສະຖານະ</option>
+        <option value="ໃໝ່">ໃໝ່</option>
+        <option value="ຜ່ານ">ຜ່ານ</option>
+        <option value="ບໍ່ຜ່ານ">ບໍ່ຜ່ານ</option>
+        <option value="ລໍຖ້າ">ລໍຖ້າ</option>
+      </select>
+    </div>
+
+    <div id="applicantList">
+      <div class="empty-state"><div class="empty-icon">📋</div><p>ກົດ "ໂຫຼດຂໍ້ມູນ" ເພື່ອສະແດງລາຍຊື່ຜູ້ສະໝັກ</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-status">
+  <div style="max-width:480px;margin:0 auto;padding:24px 14px 100px">
+    <div class="form-hero"><h2>📊 ກວດສອບສະຖານະ</h2><p>ໃສ່ເບີໂທທີ່ໃຊ້ສະໝັກ ເພື່ອກວດສອບສະຖານະ</p></div>
+    <div class="form-section">
+      <div class="field-group">
+        <div class="field">
+          <label>ເບີໂທທີ່ໃຊ້ສະໝັກ <span class="req">*</span></label>
+          <input type="tel" id="checkPhone" placeholder="020XXXXXXXX" onkeydown="if(event.key==='Enter')checkStatusByPhone()"/>
+          <div class="error-msg" id="err-checkPhone">ກະລຸນາໃສ່ເບີໂທໃຫ້ຖືກຕ້ອງ</div>
+        </div>
+        <button class="btn-submit" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold))" onclick="checkStatusByPhone()">🔍 ກວດສອບສະຖານະ</button>
+      </div>
+    </div>
+
+    <div id="statusResult" style="display:none;margin-top:16px">
+      <div class="form-section" style="text-align:center">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:4px">ຊື່ຜູ້ສະໝັກ</p>
+        <p id="resultName" style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px">–</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">ສະຖານະປັດຈຸບັນ</p>
+        <span class="status-badge status-new" id="resultStatusBadge" style="font-size:14px;padding:8px 20px">🆕 ໃໝ່</span>
+        <p id="resultDate" style="font-size:11px;color:var(--text-muted);margin-top:14px">–</p>
+      </div>
+    </div>
+
+    <div id="statusNotFound" style="display:none;margin-top:16px;text-align:center;padding:20px;color:var(--text-muted);font-size:13px">
+      <div style="font-size:36px;margin-bottom:10px">🔍</div>
+      <p id="notFoundMsg">ບໍ່ພົບເບີໂທນີ້ໃນລະບົບ</p>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="bn-item active-nav" id="bn-home" onclick="goPage('home')"><span class="bn-icon">🏠</span><span class="bn-label">ໜ້າຫຼັກ</span></button>
+  <button class="bn-item" id="bn-form" onclick="goPage('form')"><span class="bn-icon">📝</span><span class="bn-label">ສະໝັກ</span></button>
+  <button class="bn-item" id="bn-status" onclick="goPage('status')"><span class="bn-icon">📊</span><span class="bn-label">ສະຖານະ</span></button>
+</nav>
+
+<script>
+/* ══════════════════════════════════════════════
+   CONFIG – Google Apps Script Web App URL (Backend API)
+══════════════════════════════════════════════ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzbmk7S8X-y638YPEpStoBuIRhodQg1avFB2iP38jgebPtC4gdgo3Td2pT8i_vQz5iW/exec";
+
+/* ══════════════════════════════════════════════
+   callAPI – replaces google.script.run
+   Sends a POST request with Content-Type: text/plain so the
+   browser treats it as a "simple request" and skips the CORS
+   pre-flight (OPTIONS) that Apps Script cannot respond to.
+══════════════════════════════════════════════ */
+async function callAPI(action, payload) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, payload: payload || {} })
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
+}
+
+/* ══════════════════════════════════════════════
+   GLOBALS
+══════════════════════════════════════════════ */
+let currentStep = 1;
+let adminPassword = "";
+let allApplicants = [];
+
+loadLogo();
+
+(function() {
+  const wrap = document.getElementById('heroStars');
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      animation-delay: ${Math.random()*2}s;
+      animation-duration: ${1.5 + Math.random()*2}s;
+      width: ${1 + Math.random()*3}px;
+      height: ${1 + Math.random()*3}px;
+    `;
+    wrap.appendChild(s);
+  }
+})();
+
+/* ══════════════════════════════════════════════
+   LOGO MANAGEMENT
+══════════════════════════════════════════════ */
+function loadLogo() {
+  callAPI("getLogoUrl")
+    .then(res => { if (res.success && res.url) applyLogo(res.url); })
+    .catch(err => console.error(err));
+}
+
+function applyLogo(url) {
+  const icon = document.getElementById('logoIcon');
+  icon.innerHTML = url ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>` : 'E';
+  const preview = document.getElementById('logoPreview');
+  const placeholder = document.getElementById('logoPreviewPlaceholder');
+  if (preview && placeholder) {
+    if (url) { preview.src = url; preview.style.display = 'block'; placeholder.style.display = 'none'; }
+    else { preview.style.display = 'none'; placeholder.style.display = 'block'; }
+  }
+}
+
+function saveLogoUrl() {
+  const url = document.getElementById('logoUrlInput').value.trim();
+  if (!adminPassword) { showToast('❌ ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ'); return; }
+  showSpinner(true);
+  callAPI("setLogoUrl", { password: adminPassword, url })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) { applyLogo(url); showToast('✅ ບັນທຶກໂລໂກ້ສຳເລັດ', true); }
+      else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
+}
+
+function resetLogo() {
+  document.getElementById('logoUrlInput').value = '';
+  if (!adminPassword) { showToast('❌ ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ'); return; }
+  showSpinner(true);
+  callAPI("setLogoUrl", { password: adminPassword, url: '' })
+    .then(res => { showSpinner(false); if (res.success) { applyLogo(''); showToast('✅ ກັບຄືນຄ່າເລີ່ມຕົ້ນ', true); } })
+    .catch(() => showSpinner(false));
+}
+
+/* ══════ PAGE NAVIGATION ══════ */
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active-nav'));
+  const bn = document.getElementById('bn-' + id);
+  if (bn) bn.classList.add('active-nav');
+  window.scrollTo(0, 0);
+
+  if (id === 'form') {
+    document.getElementById('successScreen').classList.remove('show');
+    document.getElementById('formWrapper').style.display = 'block';
+    resetForm();
+  }
+}
+
+function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+
+function showToast(msg, gold) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (gold ? ' gold' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showSpinner(show) { document.getElementById('spinnerOverlay').classList.toggle('show', show); }
+
+/* ══════════════════════════════════════════════
+   MULTI-STEP FORM
+══════════════════════════════════════════════ */
+function resetForm() {
+  currentStep = 1;
+  ['fullName','nickname','phone','bigoId'].forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('error'); } });
+  ['age','province','bigoDownloaded'].forEach(id => { const el = document.getElementById(id); if (el) { el.selectedIndex = 0; el.classList.remove('error'); } });
+  document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+  updateStepUI();
+}
+
+function updateStepUI() {
+  document.querySelectorAll('.form-step').forEach((s, i) => s.classList.toggle('active', i + 1 === currentStep));
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('step-dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < currentStep) dot.classList.add('done'); else if (i === currentStep) dot.classList.add('active');
+  }
+  const fill = document.getElementById('progressFill');
+  const pct = (currentStep - 1) / 2;
+  fill.style.width = (pct * 168) + 'px';
+}
+
+function nextStep(step) { if (!validateStep(step)) return; currentStep = step + 1; updateStepUI(); window.scrollTo(0, 0); }
+function prevStep(step) { currentStep = step - 1; updateStepUI(); window.scrollTo(0, 0); }
+
+function validateStep(step) {
+  let valid = true;
+  if (step === 1) {
+    valid &= checkField('fullName', 'err-fullName', v => v.trim().length > 1);
+    valid &= checkField('nickname', 'err-nickname', v => v.trim().length > 0);
+    valid &= checkField('age', 'err-age', v => v !== '');
+  }
+  if (step === 2) {
+    valid &= checkField('phone', 'err-phone', v => /^0\d{7,10}$/.test(v.replace(/\s/g,'')));
+    valid &= checkField('province', 'err-province', v => v !== '');
+  }
+  return !!valid;
+}
+
+function checkField(id, errId, test) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(errId);
+  const ok = test(el.value);
+  el.classList.toggle('error', !ok);
+  if (err) err.classList.toggle('show', !ok);
+  return ok;
+}
+
+/* ══════════════════════════════════════════════
+   SUBMIT
+══════════════════════════════════════════════ */
+function submitForm() {
+  const data = {
+    fullName:        document.getElementById('fullName').value.trim(),
+    nickname:        document.getElementById('nickname').value.trim(),
+    age:             document.getElementById('age').value,
+    phone:           document.getElementById('phone').value.trim(),
+    province:        document.getElementById('province').value,
+    bigoDownloaded:  document.getElementById('bigoDownloaded').value,
+    bigoId:          document.getElementById('bigoId').value.trim(),
+  };
+
+  showSpinner(true);
+  callAPI("submitApplication", data)
+    .then(res => {
+      showSpinner(false);
+      if (res.success) onSubmitSuccess(res.seq);
+      else showToast('❌ ເກີດຂໍ້ຜິດພາດ: ' + (res.error || ''));
+    })
+    .catch(err => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); console.error(err); });
+}
+
+function onSubmitSuccess(seq) {
+  document.getElementById('seqDisplay').textContent = '#' + String(seq).padStart(3,'0');
+  document.getElementById('formWrapper').style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+  showToast('🎉 ສະໝັກສຳເລັດ!', true);
+}
+
+/* ══════════════════════════════════════════════
+   STATUS CHECK BY PHONE
+══════════════════════════════════════════════ */
+function checkStatusByPhone() {
+  const phone = document.getElementById('checkPhone').value.trim();
+  const err = document.getElementById('err-checkPhone');
+  const digitsOnly = phone.replace(/\D/g, '');
+  const ok = digitsOnly.length >= 8;
+
+  document.getElementById('checkPhone').classList.toggle('error', !ok);
+  err.classList.toggle('show', !ok);
+  if (!ok) return;
+
+  document.getElementById('statusResult').style.display = 'none';
+  document.getElementById('statusNotFound').style.display = 'none';
+  showSpinner(true);
+
+  callAPI("getApplicantStatusByPhone", { phone })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) showStatusResult(res.applicant);
+      else { document.getElementById('notFoundMsg').textContent = res.error || 'ບໍ່ພົບເບີໂທນີ້ໃນລະບົບ'; document.getElementById('statusNotFound').style.display = 'block'; }
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
+}
+
+function showStatusResult(applicant) {
+  const map = {
+    'ໃໝ່':    { cls:'status-new',  text:'🆕 ໃໝ່ – ລໍຖ້າກວດສອບ' },
+    'ຜ່ານ':   { cls:'status-pass', text:'✅ ຜ່ານແລ້ວ – ຍິນດີນຳ EMO Family!' },
+    'ບໍ່ຜ່ານ':{ cls:'status-fail', text:'❌ ບໍ່ຜ່ານການຄັດເລືອກ' },
+    'ລໍຖ້າ':  { cls:'status-wait', text:'⏳ ກຳລັງລໍຖ້າພິຈາລະນາ' },
+  };
+  const info = map[applicant.status] || map['ໃໝ່'];
+  document.getElementById('resultName').textContent = applicant.name || '–';
+  const badge = document.getElementById('resultStatusBadge');
+  badge.className = 'status-badge ' + info.cls;
+  badge.style.cssText += 'font-size:14px;padding:8px 20px';
+  badge.textContent = info.text;
+  document.getElementById('resultDate').textContent = 'ສະໝັກເມື່ອ: ' + (applicant.date || '–');
+  document.getElementById('statusResult').style.display = 'block';
+}
+
+/* ══════════════════════════════════════════════
+   ADMIN
+══════════════════════════════════════════════ */
+function adminLogin() {
+  const pw = document.getElementById('adminPass').value;
+  if (!pw) return;
+
+  showSpinner(true);
+  callAPI("adminLogin", { password: pw })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) {
+        adminPassword = pw;
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminDash').classList.add('show');
+        loadAdminData();
+        startAdminPolling();
+        const img = document.getElementById('logoIcon').querySelector('img');
+        document.getElementById('logoUrlInput').value = img ? img.src : '';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    })
+    .catch(() => { showSpinner(false); document.getElementById('loginError').style.display = 'block'; });
+}
+
+/* ══════════════════════════════════════════════
+   ADMIN: Polling for new applicants
+══════════════════════════════════════════════ */
+let lastApplicantCount = null;
+let adminPollInterval = null;
+const newApplicantSound = new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQxAADB8ABaBCEgwAAACABQwAAfQAA//8wzD8MMxxxz/MMcc4z/M4z/MQ45zhhhhh");
+
+function startAdminPolling() {
+  if (adminPollInterval) clearInterval(adminPollInterval);
+  adminPollInterval = setInterval(checkNewApplicants, 10000);
+}
+
+function checkNewApplicants() {
+  if (!adminPassword) return;
+  callAPI("getStats", { password: adminPassword }).then(res => {
+    if (!res.success) return;
+    if (lastApplicantCount !== null && res.total > lastApplicantCount) {
+      newApplicantSound.play().catch(()=>{});
+      showToast('🔔 ມີຜູ້ສະໝັກໃໝ່ເຂົ້າມາ!', true);
+      loadAdminData();
+    }
+    lastApplicantCount = res.total;
+  }).catch(()=>{});
+}
+
+function loadAdminData() {
+  showSpinner(true);
+  callAPI("getStats", { password: adminPassword })
+    .then(statsRes => {
+      if (statsRes.success) {
+        document.getElementById('stat-total').textContent = statsRes.total || 0;
+        document.getElementById('stat-today').textContent = statsRes.todayCount || 0;
+        document.getElementById('stat-new').textContent  = (statsRes.byStatus && statsRes.byStatus['ໃໝ່']) || 0;
+        document.getElementById('stat-pass').textContent = (statsRes.byStatus && statsRes.byStatus['ຜ່ານ']) || 0;
+        document.getElementById('stat-fail').textContent = (statsRes.byStatus && statsRes.byStatus['ບໍ່ຜ່ານ']) || 0;
+      }
+      return callAPI("getApplicants", { password: adminPassword });
+    })
+    .then(dataRes => {
+      showSpinner(false);
+      if (dataRes.success) { allApplicants = dataRes.data; renderApplicants(allApplicants); }
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ໂຫຼດຂໍ້ມູນລົ້ມເຫຼວ'); });
+}
+
+function renderApplicants(list) {
+  const container = document.getElementById('applicantList');
+  if (!list || list.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>ຍັງບໍ່ມີຜູ້ສະໝັກ</p></div>';
+    return;
+  }
+  container.innerHTML = list.map(r => {
+    const status = r['ສະຖານະ'] || 'ໃໝ່';
+    const statusClass = { 'ໃໝ່':'status-new', 'ຜ່ານ':'status-pass', 'ບໍ່ຜ່ານ':'status-fail', 'ລໍຖ້າ':'status-wait' }[status] || 'status-new';
+    const statusEmoji = { 'ໃໝ່':'🆕', 'ຜ່ານ':'✅', 'ບໍ່ຜ່ານ':'❌', 'ລໍຖ້າ':'⏳' }[status] || '🆕';
+    return `
+    <div class="applicant-card">
+      <div class="ac-top">
+        <div><div class="ac-name">${r['ຊື່ແທ້ (ພາສາລາວ)'] || '–'} <span style="color:var(--text-muted);font-weight:400;font-size:12px">(${r['ຊື່ທ່ຽມ (ພາສາລາວ)'] || '–'})</span></div></div>
+        <span class="status-badge ${statusClass}">${statusEmoji} ${status}</span>
+      </div>
+      <div class="ac-info">
+        <span class="ac-chip">🎂 ${r['ອາຍຸ (ປີ)'] || '–'} ປີ</span>
+        <span class="ac-chip">📍 ${r['ລະດູລະດູ'] || '–'}</span>
+        <span class="ac-chip">📞 ${r['ເລກໂທລະສັບ'] || '–'}</span>
+        <span class="ac-chip">#${r['ລຳດັບ'] || '–'}</span>
+      </div>
+      <div class="ac-actions">
+        <button class="ac-btn ac-btn-pass" onclick="setStatus(${r._row},'ຜ່ານ')">✅ ຜ່ານ</button>
+        <button class="ac-btn ac-btn-fail" onclick="setStatus(${r._row},'ບໍ່ຜ່ານ')">❌ ບໍ່ຜ່ານ</button>
+        <button class="ac-btn ac-btn-wait" onclick="setStatus(${r._row},'ລໍຖ້າ')">⏳ ລໍຖ້າ</button>
+        <button class="ac-btn ac-btn-delete" onclick="deleteRow(${r._row})">🗑️ ລຶບ</button>
+      </div>
+      <div class="ac-date">🕐 ${r['ວັນທີ/ເວລາ'] || '–'} ${r['ໝາຍເຫດ'] ? ' · 📝 ' + r['ໝາຍເຫດ'] : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterApplicants() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const filter = document.getElementById('statusFilter').value;
+  const filtered = allApplicants.filter(r => {
+    const text = Object.values(r).join(' ').toLowerCase();
+    const matchSearch = !search || text.includes(search);
+    const matchStatus = !filter || (r['ສະຖານະ'] || '') === filter;
+    return matchSearch && matchStatus;
+  });
+  renderApplicants(filtered);
+}
+
+function setStatus(rowIndex, status) {
+  showSpinner(true);
+  callAPI("updateStatus", { password: adminPassword, rowIndex, status, note: '' })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) { showToast('✅ ອັບເດດສະຖານະແລ້ວ', true); loadAdminData(); }
+      else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ຜິດພາດ'); });
+}
+
+function deleteRow(rowIndex) {
+  if (!confirm('ຕ້ອງການລຶບແຖວນີ້ ຫຼືບໍ່?')) return;
+  showSpinner(true);
+  callAPI("deleteApplicant", { password: adminPassword, rowIndex })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) { showToast('🗑️ ລຶບສຳເລັດ', false); loadAdminData(); }
+      else showToast('❌ ' + (res.error || ''));
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ຜິດພາດ'); });
+}
+</script>
+</body>
+</html>
