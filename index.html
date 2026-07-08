@@ -855,6 +855,7 @@ body {
   <div class="drawer-body">
     <button class="drawer-menu-item" onclick="goPage('home');closeDrawer()"><span class="icon">🏠</span> ໜ້າຫຼັກ</button>
     <button class="drawer-menu-item" onclick="goPage('form');closeDrawer()"><span class="icon">📝</span> ສະໝັກ VJ</button>
+    <button class="drawer-menu-item" onclick="goPage('vjid');closeDrawer()"><span class="icon">🆔</span> ຕັ້ງຊື່ VJ & ອັບຮູບ</button>
     <button class="drawer-menu-item" onclick="goPage('status');closeDrawer()"><span class="icon">📊</span> ກວດສອບສະຖານະ</button>
     <button class="drawer-menu-item" onclick="goPage('admin');closeDrawer()"><span class="icon">🔐</span> ລະບົບ Admin</button>
     <hr style="border:none;border-top:1px solid var(--border);margin:12px 0"/>
@@ -1149,10 +1150,47 @@ body {
   </div>
 </div>
 
+<div class="page" id="page-vjid">
+  <div style="max-width:480px;margin:0 auto;padding:24px 14px 100px">
+    <div class="form-hero"><h2>🆔 ຕັ້ງຊື່ VJ & ອັບຮູບ</h2><p>ໃສ່ເບີໂທທີ່ໃຊ້ສະໝັກ ເພື່ອຕັ້ງຊື່ Bigo ID</p></div>
+
+    <div class="form-section">
+      <div class="field-group">
+        <div class="field">
+          <label>ເບີໂທທີ່ໃຊ້ສະໝັກ <span class="req">*</span></label>
+          <input type="tel" id="vjPhone" placeholder="020XXXXXXXX"/>
+        </div>
+        <button class="btn-back" onclick="loadVjInfo()">🔍 ໂຫຼດຂໍ້ມູນເກົ່າ (ຖ້າມີ)</button>
+
+        <div class="field">
+          <label>ຕັ້ງຊື່ Bigo ID ຂອງທ່ານ <span class="req">*</span></label>
+          <div class="field-hint">ໃສ່ພຽງຊື່ (ອັງກິດ/ຕົວເລກ) ລະບົບຈະໃສ່ 🅔Ⓜ︎🅾︎ ແລະເບີໂທ 3 ໂຕທ້າຍໃຫ້ອັດຕະໂນມັດ</div>
+          <input type="text" id="vjNameInput" placeholder="ຕົວຢ່າງ: Xar" oninput="updateVjIdPreview()"/>
+        </div>
+
+        <div class="field">
+          <label>ID ທີ່ຈະໄດ້</label>
+          <input type="text" id="vjIdPreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
+          <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyVjId()">📋 Copy ID</button>
+        </div>
+
+        <div class="field">
+          <label>ອັບໂຫລດຮູບຂອງທ່ານ</label>
+          <input type="file" id="vjPhotoInput" accept="image/*" onchange="previewVjPhoto()"/>
+          <img id="vjPhotoPreview" style="display:none;max-width:140px;border-radius:12px;margin-top:8px;border:1px solid var(--border)"/>
+        </div>
+
+        <button class="btn-submit" onclick="saveVjInfoSubmit()">✅ ບັນທຶກຂໍ້ມູນ VJ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <nav class="bottom-nav">
   <button class="bn-item active-nav" id="bn-home" onclick="goPage('home')"><span class="bn-icon">🏠</span><span class="bn-label">ໜ້າຫຼັກ</span></button>
   <button class="bn-item" id="bn-form" onclick="goPage('form')"><span class="bn-icon">📝</span><span class="bn-label">ສະໝັກ</span></button>
   <button class="bn-item" id="bn-status" onclick="goPage('status')"><span class="bn-icon">📊</span><span class="bn-label">ສະຖານະ</span></button>
+  <button class="bn-item" id="bn-vjid" onclick="goPage('vjid')"><span class="bn-icon">🆔</span><span class="bn-label">VJ ID</span></button>
 </nav>
 
 <script>
@@ -1396,6 +1434,80 @@ function showStatusResult(applicant) {
   document.getElementById('statusResult').style.display = 'block';
 }
 
+/* ══════════ VJ NAME & ID ══════════ */
+let vjPhotoBase64 = "";
+let vjPhotoMime = "";
+
+function updateVjIdPreview() {
+  const name = document.getElementById('vjNameInput').value.trim();
+  const phone = document.getElementById('vjPhone').value.trim().replace(/\D/g,'');
+  const last3 = phone.slice(-3) || '000';
+  const preview = name ? `🅔Ⓜ︎🅾︎${name}_${last3}` : '';
+  document.getElementById('vjIdPreview').value = preview;
+}
+document.getElementById('vjPhone').addEventListener('input', updateVjIdPreview);
+
+function copyVjId() {
+  const val = document.getElementById('vjIdPreview').value;
+  if (!val) { showToast('❌ ກະລຸນາຕັ້ງຊື່ກ່ອນ'); return; }
+  navigator.clipboard.writeText(val).then(() => showToast('📋 Copy ແລ້ວ!', true));
+}
+
+function previewVjPhoto() {
+  const file = document.getElementById('vjPhotoInput').files[0];
+  if (!file) return;
+  vjPhotoMime = file.type;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    vjPhotoBase64 = e.target.result;
+    const img = document.getElementById('vjPhotoPreview');
+    img.src = vjPhotoBase64;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadVjInfo() {
+  const phone = document.getElementById('vjPhone').value.trim();
+  if (!phone) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ'); return; }
+  showSpinner(true);
+  callAPI("getVjInfoByPhone", { phone })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) {
+        if (res.vjId) {
+          const nameOnly = res.vjId.replace('🅔Ⓜ︎🅾︎','').replace(/_\d{3}$/,'');
+          document.getElementById('vjNameInput').value = nameOnly;
+          updateVjIdPreview();
+        }
+        if (res.photoUrl) {
+          const img = document.getElementById('vjPhotoPreview');
+          img.src = res.photoUrl; img.style.display = 'block';
+        }
+        showToast('✅ ໂຫຼດຂໍ້ມູນແລ້ວ', true);
+      } else showToast('ℹ️ ' + (res.error || 'ຍັງບໍ່ມີຂໍ້ມູນ'));
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ຜິດພາດ'); });
+}
+
+function saveVjInfoSubmit() {
+  const phone = document.getElementById('vjPhone').value.trim();
+  const name = document.getElementById('vjNameInput').value.trim();
+  const vjId = document.getElementById('vjIdPreview').value.trim();
+  if (!phone || !name) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ ແລະ ຊື່'); return; }
+
+  showSpinner(true);
+  callAPI("saveVjInfo", {
+    phone, vjName: name, vjId,
+    photoBase64: vjPhotoBase64,
+    photoMimeType: vjPhotoMime
+  }).then(res => {
+    showSpinner(false);
+    if (res.success) showToast('🎉 ບັນທຶກສຳເລັດ!', true);
+    else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
+  }).catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
+}
+
 /* ══════════════════════════════════════════════
    ADMIN
 ══════════════════════════════════════════════ */
@@ -1488,6 +1600,7 @@ function renderApplicants(list) {
         <span class="ac-chip">📍 ${r['ລະດູລະດູ'] || '–'}</span>
         <span class="ac-chip">📞 ${r['ເລກໂທລະສັບ'] || '–'}</span>
         <span class="ac-chip">#${r['ລຳດັບ'] || '–'}</span>
+        ${r['Photo URL'] ? `<img src="${r['Photo URL']}" style="width:60px;height:60px;border-radius:10px;object-fit:cover;margin-bottom:8px;border:1px solid var(--border)"/>` : ''}
       </div>
       <div class="ac-actions">
         <button class="ac-btn ac-btn-pass" onclick="setStatus(${r._row},'ຜ່ານ')">✅ ຜ່ານ</button>
