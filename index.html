@@ -875,7 +875,7 @@ body {
       <div class="hero-subtitle">VJ BIGO LIVE RECRUITMENT</div>
       <div class="hero-divider"><span class="hero-divider-icon">💎</span></div>
       <div class="hero-desc">ຮ່ວມເປັນສ່ວນໜຶ່ງຂອງ EMO Family<br/>ລາຍໄດ້ດີ · ປຶກສາໄດ້ 24/7 · ຊ່ວຍທຸກຂັ້ນຕອນ</div>
-      <div class="hero-income"><span>💰</span><span>ລາຍໄດ້ 5 – 60 ລ້ານ / ເດືອນ</span></div>
+      <div class="hero-income"><span>💰</span><span>ລາຍໄດ້ 30 – 60 ລ້ານ / ເດືອນ</span></div>
     </div>
   </div>
 
@@ -889,7 +889,7 @@ body {
         </div>
         <div style="text-align:right">
           <div class="income-label">ລາຍໄດ້ຕໍ່ເດືອນ</div>
-          <div class="income-value">5 – 60 ລ້ານ</div>
+          <div class="income-value">30 – 60 ລ້ານ</div>
           <div class="income-sub">ກີບລາວ</div>
         </div>
       </div>
@@ -1164,14 +1164,21 @@ body {
 
         <div class="field">
           <label>ຕັ້ງຊື່ Bigo ID ຂອງທ່ານ <span class="req">*</span></label>
-          <div class="field-hint">ໃສ່ພຽງຊື່ (ອັງກິດ/ຕົວເລກ) ລະບົບຈະໃສ່ 🅔Ⓜ︎🅾︎ ແລະເບີໂທ 3 ໂຕທ້າຍໃຫ້ອັດຕະໂນມັດ</div>
+          <div class="field-hint">ໃສ່ພຽງຊື່ (ອັງກິດ ຫຼື ໄທ) ລະບົບຈະໃສ່ 🅔Ⓜ︎🅾︎ ອັດຕະໂນມັດ</div>
           <input type="text" id="vjNameInput" placeholder="ຕົວຢ່າງ: Xar" oninput="updateVjIdPreview()"/>
         </div>
 
         <div class="field">
-          <label>ID ທີ່ຈະໄດ້</label>
-          <input type="text" id="vjIdPreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
-          <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyVjId()">📋 Copy ID</button>
+          <label>ຊື່ Bigo ID (ຄັດລອກໄດ້)</label>
+          <input type="text" id="vjBigoNamePreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
+          <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyBigoName()">📋 Copy ຊື່ Bigo</button>
+        </div>
+
+        <div class="field">
+          <label>ໄອດີໂຕເອງ</label>
+          <div class="field-hint">ຊື່ ຕາມດ້ວຍເບີໂທ 3 ໂຕທ້າຍ ຕົວຢ່າງ: Xar_123</div>
+          <input type="text" id="vjCustomIdPreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
+          <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyCustomId()">📋 Copy ໄອດີໂຕເອງ</button>
         </div>
 
         <div class="field">
@@ -1442,15 +1449,21 @@ function updateVjIdPreview() {
   const name = document.getElementById('vjNameInput').value.trim();
   const phone = document.getElementById('vjPhone').value.trim().replace(/\D/g,'');
   const last3 = phone.slice(-3) || '000';
-  const preview = name ? `🅔Ⓜ︎🅾︎${name}_${last3}` : '';
-  document.getElementById('vjIdPreview').value = preview;
+  document.getElementById('vjBigoNamePreview').value = name ? `🅔Ⓜ︎🅾︎${name}` : '';
+  document.getElementById('vjCustomIdPreview').value = name ? `${name}_${last3}` : '';
 }
 document.getElementById('vjPhone').addEventListener('input', updateVjIdPreview);
 
-function copyVjId() {
-  const val = document.getElementById('vjIdPreview').value;
+function copyBigoName() {
+  const val = document.getElementById('vjBigoNamePreview').value;
   if (!val) { showToast('❌ ກະລຸນາຕັ້ງຊື່ກ່ອນ'); return; }
-  navigator.clipboard.writeText(val).then(() => showToast('📋 Copy ແລ້ວ!', true));
+  navigator.clipboard.writeText(val).then(() => showToast('📋 Copy ຊື່ Bigo ແລ້ວ!', true));
+}
+
+function copyCustomId() {
+  const val = document.getElementById('vjCustomIdPreview').value;
+  if (!val) { showToast('❌ ກະລຸນາຕັ້ງຊື່ກ່ອນ'); return; }
+  navigator.clipboard.writeText(val).then(() => showToast('📋 Copy ໄອດີໂຕເອງ ແລ້ວ!', true));
 }
 
 function previewVjPhoto() {
@@ -1493,7 +1506,7 @@ function loadVjInfo() {
 function saveVjInfoSubmit() {
   const phone = document.getElementById('vjPhone').value.trim();
   const name = document.getElementById('vjNameInput').value.trim();
-  const vjId = document.getElementById('vjIdPreview').value.trim();
+  const vjId = document.getElementById('vjCustomIdPreview').value.trim();
   if (!phone || !name) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ ແລະ ຊື່'); return; }
 
   showSpinner(true);
