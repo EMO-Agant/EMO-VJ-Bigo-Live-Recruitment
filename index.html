@@ -1163,19 +1163,19 @@ body {
         <button class="btn-back" onclick="loadVjInfo()">🔍 ໂຫຼດຂໍ້ມູນເກົ່າ (ຖ້າມີ)</button>
 
         <div class="field">
-          <label>ຕັ້ງຊື່ Bigo ID ຂອງທ່ານ <span class="req">*</span></label>
+          <label>ຕັ້ງຊື່ Bigo ຂອງທ່ານ <span class="req">*</span></label>
           <div class="field-hint">ໃສ່ພຽງຊື່ (ອັງກິດ ຫຼື ໄທ) ລະບົບຈະໃສ່ 🅔Ⓜ︎🅾︎ ອັດຕະໂນມັດ</div>
           <input type="text" id="vjNameInput" placeholder="ຕົວຢ່າງ: Xar" oninput="updateVjIdPreview()"/>
         </div>
 
         <div class="field">
-          <label>ຊື່ Bigo ID (ຄັດລອກໄດ້)</label>
+          <label>ຊື່ Bigo (ຄັດລອກໄດ້)</label>
           <input type="text" id="vjBigoNamePreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
           <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyBigoName()">📋 Copy ຊື່ Bigo</button>
         </div>
 
         <div class="field">
-          <label>ໄອດີໂຕເອງ</label>
+          <label>ຕັ້ງ ID ໂຕເອງ</label>
           <div class="field-hint">ຊື່ ຕາມດ້ວຍເບີໂທ 3 ໂຕທ້າຍ ຕົວຢ່າງ: Xar_123</div>
           <input type="text" id="vjCustomIdPreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
           <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyCustomId()">📋 Copy ໄອດີໂຕເອງ</button>
@@ -1396,6 +1396,7 @@ function onSubmitSuccess(seq) {
   document.getElementById('formWrapper').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
   showToast('🎉 ສະໝັກສຳເລັດ!', true);
+  setTimeout(() => { goPage('status'); }, 2000); // ← ເພີ່ມແຖວນີ້
 }
 
 /* ══════════════════════════════════════════════
@@ -1506,19 +1507,38 @@ function loadVjInfo() {
 function saveVjInfoSubmit() {
   const phone = document.getElementById('vjPhone').value.trim();
   const name = document.getElementById('vjNameInput').value.trim();
+  const bigoFullName = document.getElementById('vjBigoNamePreview').value.trim(); // ← ເພີ່ມ
   const vjId = document.getElementById('vjCustomIdPreview').value.trim();
   if (!phone || !name) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ ແລະ ຊື່'); return; }
 
   showSpinner(true);
   callAPI("saveVjInfo", {
-    phone, vjName: name, vjId,
+    phone, vjName: bigoFullName, vjId,
     photoBase64: vjPhotoBase64,
     photoMimeType: vjPhotoMime
   }).then(res => {
     showSpinner(false);
-    if (res.success) showToast('🎉 ບັນທຶກສຳເລັດ!', true);
+    if (res.success) {
+      if (vjPhotoBase64 && !res.photoUploaded) {
+        showToast('⚠️ ບັນທຶກຊື່ສຳເລັດ ແຕ່ຮູບອັບໂຫລດບໍ່ໄດ້: ' + (res.photoError || ''));
+      } else {
+        showToast('🎉 ບັນທຶກສຳເລັດ!', true);
+      }
+    }
     else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
   }).catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
+}
+
+function resetVjForm() {
+  document.getElementById('vjPhone').value = '';
+  document.getElementById('vjNameInput').value = '';
+  document.getElementById('vjBigoNamePreview').value = '';
+  document.getElementById('vjCustomIdPreview').value = '';
+  document.getElementById('vjPhotoInput').value = '';
+  document.getElementById('vjPhotoPreview').style.display = 'none';
+  document.getElementById('vjPhotoPreview').src = '';
+  vjPhotoBase64 = '';
+  vjPhotoMime = '';
 }
 
 /* ══════════════════════════════════════════════
