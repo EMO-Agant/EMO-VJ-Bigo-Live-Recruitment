@@ -1145,6 +1145,7 @@ body {
         <p id="resultName" style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px">–</p>
         <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">ສະຖານະປັດຈຸບັນ</p>
         <span class="status-badge status-new" id="resultStatusBadge" style="font-size:14px;padding:8px 20px">🆕 ໃໝ່</span>
+        <div id="statusStepsWrap"></div>
         <p id="resultDate" style="font-size:11px;color:var(--text-muted);margin-top:14px">–</p>
       </div>
     </div>
@@ -1433,10 +1434,10 @@ function checkStatusByPhone() {
 
 function showStatusResult(applicant) {
   const map = {
-    'ໃໝ່':    { cls:'status-new',  text:'🆕 ໃໝ່ – ລໍຖ້າກວດສອບ' },
-    'ຜ່ານ':   { cls:'status-pass', text:'✅ ຜ່ານແລ້ວ – ຍິນດີນຳ EMO Family!' },
-    'ບໍ່ຜ່ານ':{ cls:'status-fail', text:'❌ ບໍ່ຜ່ານການຄັດເລືອກ' },
-    'ລໍຖ້າ':  { cls:'status-wait', text:'⏳ ກຳລັງລໍຖ້າພິຈາລະນາ' },
+    'ໃໝ່':    { cls:'status-new',  text:'🆕 ໃໝ່ – ລໍຖ້າກວດສອບ',            step: 1 },
+    'ລໍຖ້າ':  { cls:'status-wait', text:'⏳ ກຳລັງລໍຖ້າພິຈາລະນາ',            step: 2 },
+    'ຜ່ານ':   { cls:'status-pass', text:'✅ ຜ່ານແລ້ວ – ຍິນດີນຳ EMO Family!', step: 3 },
+    'ບໍ່ຜ່ານ':{ cls:'status-fail', text:'❌ ບໍ່ຜ່ານການຄັດເລືອກ',             step: -1 },
   };
   const info = map[applicant.status] || map['ໃໝ່'];
   document.getElementById('resultName').textContent = applicant.name || '–';
@@ -1446,6 +1447,42 @@ function showStatusResult(applicant) {
   badge.textContent = info.text;
   document.getElementById('resultDate').textContent = 'ສະໝັກເມື່ອ: ' + (applicant.date || '–');
   document.getElementById('statusResult').style.display = 'block';
+  renderStatusSteps(info.step);
+}
+
+function renderStatusSteps(currentStep) {
+  const steps = [
+    { icon: '📝', label: 'ສະໝັກ' },
+    { icon: '⏳', label: 'ພິຈາລະນາ' },
+    { icon: '✅', label: 'ຜ່ານ' },
+  ];
+  const wrap = document.getElementById('statusStepsWrap');
+  if (!wrap) return;
+
+  if (currentStep === -1) {
+    // ບໍ່ຜ່ານ — ສະແດງເປັນສີແດງ ບໍ່ມີ progress
+    wrap.innerHTML = `<div style="text-align:center;padding:16px;color:#C62828;font-size:13px;font-weight:600">❌ ຄຳຮ້ອງນີ້ບໍ່ຜ່ານການຄັດເລືອກ</div>`;
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;padding:8px 0">
+      ${steps.map((s, i) => {
+        const idx = i + 1;
+        const done = idx < currentStep;
+        const active = idx === currentStep;
+        const color = done ? '#2E7D32' : (active ? '#C9A84C' : '#D4C49A');
+        const bg = done ? '#E8F5E9' : (active ? '#FFF3D0' : '#F5F0E0');
+        return `
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="width:44px;height:44px;border-radius:50%;background:${bg};border:2px solid ${color};display:flex;align-items:center;justify-content:center;font-size:20px">${s.icon}</div>
+            <span style="font-size:10px;color:${color};font-weight:${active ? '700' : '500'}">${s.label}</span>
+          </div>
+          ${idx < steps.length ? `<div style="flex:0.5;height:2px;background:${done ? '#2E7D32' : '#D4C49A'};margin-top:-22px"></div>` : ''}
+        `;
+      }).join('')}
+    </div>
+  `;
 }
 
 /* ══════════ VJ NAME & ID ══════════ */
@@ -1583,6 +1620,7 @@ function adminLogin() {
    ADMIN: Polling for new applicants
 ══════════════════════════════════════════════ */
 let lastApplicantCount = null;
+let lastVjCount = null;
 let adminPollInterval = null;
 const newApplicantSound = new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQxAADB8ABaBCEgwAAACABQwAAfQAA//8wzD8MMxxxz/MMcc4z/M4z/MQ45zhhhhh");
 
@@ -1600,7 +1638,13 @@ function checkNewApplicants() {
       showToast('🔔 ມີຜູ້ສະໝັກໃໝ່ເຂົ້າມາ!', true);
       loadAdminData();
     }
+    if (lastVjCount !== null && res.vjCount > lastVjCount) {
+      newApplicantSound.play().catch(()=>{});
+      showToast('🔔 ວີເຈຕັ້ງຊື່ ແລະ ອັບຮູບແລ້ວ! ກະລຸນາກວດສອບ', true);
+      loadAdminData();
+    }
     lastApplicantCount = res.total;
+    lastVjCount = res.vjCount;
   }).catch(()=>{});
 }
 
