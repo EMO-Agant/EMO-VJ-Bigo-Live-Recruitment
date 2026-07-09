@@ -1488,7 +1488,7 @@ function renderStatusSteps(currentStep) {
   }
 
   wrap.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;gap:0;padding:8px 0">
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;padding:8px 0;margin-top:28px">
       ${steps.map((s, i) => {
         const idx = i + 1;
         const done = idx < currentStep || idx === currentStep && idx === steps.length;
