@@ -856,6 +856,7 @@ body {
     <button class="drawer-menu-item" onclick="goPage('home');closeDrawer()"><span class="icon">🏠</span> ໜ້າຫຼັກ</button>
     <button class="drawer-menu-item" onclick="goPage('form');closeDrawer()"><span class="icon">📝</span> ສະໝັກ VJ</button>
     <button class="drawer-menu-item" onclick="goPage('vjid');closeDrawer()"><span class="icon">🆔</span> ຕັ້ງຊື່ VJ & ອັບຮູບ</button>
+    <button class="drawer-menu-item" onclick="goPage('casting');closeDrawer()"><span class="icon">🎬</span> ລົງທະບຽນ Bigo Live</button>
     <button class="drawer-menu-item" onclick="goPage('status');closeDrawer()"><span class="icon">📊</span> ກວດສອບສະຖານະ</button>
     <button class="drawer-menu-item" onclick="goPage('admin');closeDrawer()"><span class="icon">🔐</span> ລະບົບ Admin</button>
     <hr style="border:none;border-top:1px solid var(--border);margin:12px 0"/>
@@ -1100,6 +1101,25 @@ body {
       </div>
     </div>
 
+    <div class="form-section">
+      <div class="section-title">🎬 ຮູບຕົວຢ່າງ ໜ້າ Casting</div>
+      <div class="field-group">
+        <div class="field">
+          <label>ລິ້ງຮູບຕົວຢ່າງ #1 (ວິທີສົ່ງ Casting)</label>
+          <input type="text" id="castingImg1Input" placeholder="https://..."/>
+        </div>
+        <div class="field">
+          <label>ລິ້ງຮູບຕົວຢ່າງ #2 (ຕົວຢ່າງຄອມເມັນ)</label>
+          <input type="text" id="castingImg2Input" placeholder="https://..."/>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="ac-btn ac-btn-pass" style="flex:1;padding:10px" onclick="saveCastingImages()">💾 ບັນທຶກຮູບຕົວຢ່າງ</button>
+          <button class="ac-btn ac-btn-delete" style="padding:10px" onclick="loadCastingAdminInputs()">🔄 ໂຫຼດຄືນ</button>
+        </div>
+        <div id="castingAdminPreview" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">ທັງໝົດ</div></div>
       <div class="stat-card"><div class="stat-num" id="stat-today">–</div><div class="stat-label">ມື້ນີ້</div></div>
@@ -1200,10 +1220,71 @@ body {
   </div>
 </div>
 
+<div class="page" id="page-casting">
+  <div style="max-width:480px;margin:0 auto;padding:24px 14px 100px">
+    <div class="form-hero"><h2>🎬 ລົງທະບຽນ Bigo Live</h2><p>ວິທີການສົ່ງ Casting ເຂົ້າສັງກັດ</p></div>
+
+    <div class="bigo-box">
+      <h4>1️⃣ ວີດີໂອຢືນຢັນ</h4>
+      <ol>
+        <li>✅ ວີດີໂອທີ່ເຫັນໜ້າວີເຈຢ່າງຊັດເຈນ</li>
+      </ol>
+    </div>
+
+    <div class="bigo-box">
+      <h4>2️⃣ ຮູບພາບຢືນຢັນການເຂົ້າສັງກັດ</h4>
+      <ol>
+        <li>⚠️ ພິມຄອມເມັນຜ່ານໄລຟ໌ເທົ່ານັ້ນ</li>
+        <li>✅ ຮູບຕ້ອງແສດງໃຫ້ເຫັນໃບໜ້າວີເຈຊັດເຈນ</li>
+        <li>✅ ຮູບຕ້ອງແສດງໃຫ້ເຫັນ BIGO ID ຊັດເຈນ</li>
+        <li>✅ ຮູບຕ້ອງແສດງໃຫ້ເຫັນຊື່ສັງກັດຊັດເຈນ</li>
+      </ol>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">📝 ຕົວຢ່າງຂໍ້ຄວາມ</div>
+      <div style="background:var(--off-white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:12.5px;line-height:1.8;color:var(--text-mid)">
+        ສັງກັດ : ວີເຈ BIGO ID : AAA ຢືນຢັນການເຂົ້າສັງກັດ A ຫຼືບໍ່<br/>
+        ວີເຈ : ຢືນຢັນ
+      </div>
+      <p style="font-size:11px;color:#E53935;margin-top:10px;font-weight:600">🔴 ການອະນຸມັດແຄສຈະອະນຸມັດໃນເວລາທຳການ 9.30-18.30 ເທົ່ານັ້ນ</p>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">🖼️ ຮູບຕົວຢ່າງ (ອ້າງອີງ)</div>
+      <div id="castingExampleImgs" style="display:flex;flex-direction:column;gap:12px">
+        <div style="text-align:center;color:var(--text-muted);font-size:12px;padding:20px">ກຳລັງໂຫຼດ...</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">📷 ອັບໂຫລດຮູບຂອງທ່ານເບິ່ງກ່ອນສົ່ງ</div>
+      <div class="field-group">
+        <div class="field">
+          <label>ອັບໂຫລດຮູບ Casting ຂອງທ່ານ (ເບິ່ງກ່ອນ ບໍ່ບັນທຶກເຂົ້າລະບົບ)</label>
+          <input type="file" id="castingPreviewInput" accept="image/*" onchange="previewCastingImg()"/>
+          <img id="castingPreviewImg" style="display:none;width:100%;border-radius:12px;margin-top:8px;border:1px solid var(--border)"/>
+        </div>
+      </div>
+    </div>
+
+    <a class="contact-strip" href="https://wa.me/8562054499925" target="_blank" rel="noopener" style="text-decoration:none;cursor:pointer">
+      <div class="icon" style="width:44px;height:44px;flex-shrink:0">
+        <img src="https://i.postimg.cc/x1C39VRj/whatsapp-logo-icon.png" alt="WhatsApp" style="width:100%;height:100%;object-fit:contain;display:block"/>
+      </div>
+      <div class="contact-info">
+        <div class="label">ສົ່ງຄຳຖາມ ຫຼື ຂໍຄວາມຊ່ວຍເຫຼືອ</div>
+        <div class="number">020 5449 9925</div>
+      </div>
+    </a>
+  </div>
+</div>
+
 <nav class="bottom-nav">
   <button class="bn-item active-nav" id="bn-home" onclick="goPage('home')"><span class="bn-icon">🏠</span><span class="bn-label">ໜ້າຫຼັກ</span></button>
   <button class="bn-item" id="bn-form" onclick="goPage('form')"><span class="bn-icon">📝</span><span class="bn-label">ສະໝັກ</span></button>
   <button class="bn-item" id="bn-vjid" onclick="goPage('vjid')"><span class="bn-icon">🆔</span><span class="bn-label">VJ ID</span></button>
+  <button class="bn-item" id="bn-casting" onclick="goPage('casting')"><span class="bn-icon">🎬</span><span class="bn-label">Casting</span></button>
   <button class="bn-item" id="bn-status" onclick="goPage('status')"><span class="bn-icon">📊</span><span class="bn-label">ສະຖານະ</span></button>
 </nav>
 
@@ -1297,6 +1378,40 @@ function resetLogo() {
     .catch(() => showSpinner(false));
 }
 
+function loadCastingAdminInputs() {
+  callAPI("getCastingImages")
+    .then(res => {
+      if (res.success) {
+        document.getElementById('castingImg1Input').value = res.img1 || '';
+        document.getElementById('castingImg2Input').value = res.img2 || '';
+        renderCastingAdminPreview(res.img1, res.img2);
+      }
+    })
+    .catch(() => {});
+}
+
+function renderCastingAdminPreview(img1, img2) {
+  const wrap = document.getElementById('castingAdminPreview');
+  if (!wrap) return;
+  wrap.innerHTML = [img1, img2].filter(Boolean).map(url =>
+    `<img src="${url}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"/>`
+  ).join('');
+}
+
+function saveCastingImages() {
+  if (!adminPassword) { showToast('❌ ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ'); return; }
+  const img1 = document.getElementById('castingImg1Input').value.trim();
+  const img2 = document.getElementById('castingImg2Input').value.trim();
+  showSpinner(true);
+  callAPI("setCastingImages", { password: adminPassword, img1, img2 })
+    .then(res => {
+      showSpinner(false);
+      if (res.success) { renderCastingAdminPreview(img1, img2); showToast('✅ ບັນທຶກຮູບຕົວຢ່າງສຳເລັດ', true); }
+      else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
+    })
+    .catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
+}
+
 /* ══════ PAGE NAVIGATION ══════ */
 function goPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1310,6 +1425,10 @@ function goPage(id) {
     document.getElementById('successScreen').classList.remove('show');
     document.getElementById('formWrapper').style.display = 'block';
     resetForm();
+  }
+
+  if (id === 'casting') {
+    loadCastingImages();
   }
 }
 
@@ -1621,6 +1740,35 @@ function resetVjForm() {
   vjPhotoMime = '';
 }
 
+/* ══════════ CASTING PAGE ══════════ */
+function loadCastingImages() {
+  callAPI("getCastingImages")
+    .then(res => {
+      const wrap = document.getElementById('castingExampleImgs');
+      if (!wrap) return;
+      if (res.success && (res.img1 || res.img2)) {
+        wrap.innerHTML = [res.img1, res.img2].filter(Boolean).map(url =>
+          `<img src="${url}" style="width:100%;border-radius:12px;border:1px solid var(--border)"/>`
+        ).join('');
+      } else {
+        wrap.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;padding:20px">ຍັງບໍ່ມີຮູບຕົວຢ່າງ</div>';
+      }
+    })
+    .catch(() => {});
+}
+
+function previewCastingImg() {
+  const file = document.getElementById('castingPreviewInput').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('castingPreviewImg');
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
 /* ══════════════════════════════════════════════
    ADMIN
 ══════════════════════════════════════════════ */
@@ -1632,12 +1780,13 @@ function adminLogin() {
   callAPI("adminLogin", { password: pw })
     .then(res => {
       showSpinner(false);
-      if (res.success) {
+            if (res.success) {
         adminPassword = pw;
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminDash').classList.add('show');
         loadAdminData();
         startAdminPolling();
+        loadCastingAdminInputs();
         const img = document.getElementById('logoIcon').querySelector('img');
         document.getElementById('logoUrlInput').value = img ? img.src : '';
       } else {
