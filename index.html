@@ -1513,7 +1513,7 @@ function loadVjInfo() {
 function saveVjInfoSubmit() {
   const phone = document.getElementById('vjPhone').value.trim();
   const name = document.getElementById('vjNameInput').value.trim();
-  const bigoFullName = document.getElementById('vjBigoNamePreview').value.trim(); // ← ເພີ່ມ
+  const bigoFullName = document.getElementById('vjBigoNamePreview').value.trim();
   const vjId = document.getElementById('vjCustomIdPreview').value.trim();
   if (!phone || !name) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ ແລະ ຊື່'); return; }
 
@@ -1530,6 +1530,12 @@ function saveVjInfoSubmit() {
       } else {
         showToast('🎉 ບັນທຶກສຳເລັດ!', true);
       }
+      // ພາໄປໜ້າສະຖານະ ພ້ອມໃສ່ເບີໂທໃຫ້ອັດຕະໂນມັດ ແລ້ວກົດກວດສອບໃຫ້ເລີຍ
+      setTimeout(() => {
+        goPage('status');
+        document.getElementById('checkPhone').value = phone;
+        checkStatusByPhone();
+      }, 1200);
     }
     else showToast('❌ ' + (res.error || 'ຜິດພາດ'));
   }).catch(() => { showSpinner(false); showToast('❌ ການເຊື່ອມຕໍ່ລົ້ມເຫຼວ'); });
