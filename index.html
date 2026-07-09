@@ -1639,7 +1639,12 @@ function renderApplicants(list) {
         <span class="ac-chip">📍 ${r['ລະດູລະດູ'] || '–'}</span>
         <span class="ac-chip">📞 ${r['ເລກໂທລະສັບ'] || '–'}</span>
         <span class="ac-chip">#${r['ລຳດັບ'] || '–'}</span>
-        ${r['Photo URL'] ? `<a href="${r['Photo URL']}" target="_blank" rel="noopener" style="display:block;margin-bottom:4px"><img src="${r['Photo URL']}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--gold)"/></a><span style="font-size:10px;color:var(--gold-dark)">📷 ກົດຮູບເພື່ອເບິ່ງເຕັມ</span>` : (r['ID Bigo'] ? `<span style="font-size:10px;color:var(--text-muted)">📷 ຍັງບໍ່ມີຮູບ</span>` : '')}
+        ${r['Photo URL'] ? (() => {
+          const rawUrl = r['Photo URL'];
+          const idMatch = rawUrl.match(/[-\w]{25,}/); // ດຶງ Google Drive file ID ອອກຈາກລິ້ງ
+          const thumbUrl = idMatch ? `https://drive.google.com/thumbnail?id=${idMatch[0]}&sz=w1000` : rawUrl;
+          return `<a href="${rawUrl}" target="_blank" rel="noopener" style="display:block;margin-bottom:4px"><img src="${thumbUrl}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--gold)" onerror="this.parentElement.innerHTML='<span style=\\'font-size:10px;color:var(--text-muted)\\'>📷 ຮູບໂຫຼດບໍ່ໄດ້</span>'"/></a><span style="font-size:10px;color:var(--gold-dark)">📷 ກົດຮູບເພື່ອເບິ່ງເຕັມ</span>`;
+        })() : (r['ID Bigo'] ? `<span style="font-size:10px;color:var(--text-muted)">📷 ຍັງບໍ່ມີຮູບ</span>` : '')}
       </div>
       <div class="ac-actions">
         <button class="ac-btn ac-btn-pass" onclick="setStatus(${r._row},'ຜ່ານ')">✅ ຜ່ານ</button>
