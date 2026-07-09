@@ -903,7 +903,7 @@ body {
     <div class="perk-card"><div class="perk-icon">🆓</div><div class="perk-label">ສະໝັກ<br/>ຟຣີ</div></div>
     <div class="perk-card"><div class="perk-icon">🎓</div><div class="perk-label">ສອນ<br/>ທຸກຢ່າງ</div></div>
     <div class="perk-card"><div class="perk-icon">💎</div><div class="perk-label">ວຽກເສີມ<br/>ລາຍໄດ້ດີ</div></div>
-    <div class="perk-card"><div class="perk-icon">📱</div><div class="perk-label">ດາວໂຫລດແອປ Bigo Live<br/>App Store, Play Store</div></div>
+    <div class="perk-card"><div class="perk-icon">📱</div><div class="perk-label">Bigo Live<br/>App Store Play Store</div></div>
   </div>
 
   <div class="apply-cta" style="padding:0 14px">
@@ -1087,7 +1087,12 @@ body {
         <h2 style="font-family:var(--font-display);font-size:20px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Dashboard</h2>
         <p style="font-size:11px;color:var(--text-muted)">EMO AGENCY – ລະບົບຄັດເລືອກ VJ</p>
       </div>
-      <button onclick="loadAdminData()" style="padding:8px 16px;border:1px solid var(--gold);background:var(--white);border-radius:var(--radius-sm);color:var(--gold-dark);font-family:var(--font-lao);font-size:12px;cursor:pointer">🔄 ໂຫຼດຂໍ້ມູນ</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div id="pendingBadge" style="display:none;align-items:center;gap:6px;background:#FFF3E0;border:1px solid #FFB74D;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:#E65100;white-space:nowrap">
+          🔔 <span id="pendingCount">0</span> ຄົນລໍຖ້າກວດສອບ
+        </div>
+        <button onclick="loadAdminData()" style="padding:8px 16px;border:1px solid var(--gold);background:var(--white);border-radius:var(--radius-sm);color:var(--gold-dark);font-family:var(--font-lao);font-size:12px;cursor:pointer">🔄 ໂຫຼດຂໍ້ມູນ</button>
+      </div>
     </div>
 
     <div class="form-section">
@@ -1538,6 +1543,8 @@ function onSubmitSuccess(seq) {
 ══════════════════════════════════════════════ */
 let statusPollInterval = null;
 let statusPollPhone = null;
+let lastKnownStatus = null;
+const statusChangeSound = new Audio("data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQxAADB8ABaBCEgwAAACABQwAAfQAA//8wzD8MMxxxz/MMcc4z/M4z/MQ45zhhhhh");
 
 function checkStatusByPhone() {
   const phone = document.getElementById('checkPhone').value.trim();
@@ -1551,6 +1558,7 @@ function checkStatusByPhone() {
 
   document.getElementById('statusResult').style.display = 'none';
   document.getElementById('statusNotFound').style.display = 'none';
+  lastKnownStatus = null;
   showSpinner(true);
 
   callAPI("getApplicantStatusByPhone", { phone })
@@ -1583,6 +1591,12 @@ function stopStatusPolling() {
 }
 
 function showStatusResult(applicant) {
+  if (lastKnownStatus !== null && lastKnownStatus !== applicant.status) {
+    statusChangeSound.play().catch(()=>{});
+    showToast('🔔 ສະຖານະຂອງທ່ານມີການປ່ຽນແປງ!', true);
+  }
+  lastKnownStatus = applicant.status;
+
   const map = {
     'ໃໝ່':    { cls:'status-new',  text:'🆕 ໃໝ່ – ລໍຖ້າກວດສອບ',            step: 1 },
     'ລໍຖ້າ':  { cls:'status-wait', text:'⏳ ກຳລັງລໍຖ້າພິຈາລະນາ',            step: 2 },
@@ -1833,6 +1847,13 @@ function checkNewApplicants() {
     }
     lastApplicantCount = res.total;
     lastVjCount = res.vjCount;
+
+    const pendingTotal = ((res.byStatus && res.byStatus['ໃໝ່']) || 0) + ((res.byStatus && res.byStatus['ລໍຖ້າ']) || 0);
+    const badge = document.getElementById('pendingBadge');
+    if (badge) {
+      document.getElementById('pendingCount').textContent = pendingTotal;
+      badge.style.display = pendingTotal > 0 ? 'flex' : 'none';
+    }
   }).catch(()=>{});
 }
 
@@ -1846,6 +1867,11 @@ function loadAdminData() {
         document.getElementById('stat-new').textContent  = (statsRes.byStatus && statsRes.byStatus['ໃໝ່']) || 0;
         document.getElementById('stat-pass').textContent = (statsRes.byStatus && statsRes.byStatus['ຜ່ານ']) || 0;
         document.getElementById('stat-fail').textContent = (statsRes.byStatus && statsRes.byStatus['ບໍ່ຜ່ານ']) || 0;
+
+        const pendingTotal = ((statsRes.byStatus && statsRes.byStatus['ໃໝ່']) || 0) + ((statsRes.byStatus && statsRes.byStatus['ລໍຖ້າ']) || 0);
+        const badge = document.getElementById('pendingBadge');
+        document.getElementById('pendingCount').textContent = pendingTotal;
+        badge.style.display = pendingTotal > 0 ? 'flex' : 'none';
       }
       return callAPI("getApplicants", { password: adminPassword });
     })
