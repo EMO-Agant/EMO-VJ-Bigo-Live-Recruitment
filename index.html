@@ -1004,7 +1004,7 @@ body {
         <div class="field-group">
           <div class="field">
             <label>ຊື່ແທ້ (ພາສາລາວ) <span class="req">*</span></label>
-            <div class="field-hint">ຕົວຢ່າງ: ອັກຄໍ ເທດພະອົງ</div>
+            <div class="field-hint">ຕົວຢ່າງ: ພອນ ເທດສະພົງ</div>
             <input type="text" id="fullName" placeholder="ໃສ່ຊື່ແທ້ຂອງທ່ານ"/>
             <div class="error-msg" id="err-fullName">ກະລຸນາໃສ່ຊື່ແທ້</div>
           </div>
@@ -1242,8 +1242,8 @@ body {
 
         <div class="field">
           <label>ຕັ້ງ ID ໂຕເອງ</label>
-          <div class="field-hint">ຊື່ ຕາມດ້ວຍເບີໂທ 3 ໂຕທ້າຍ ຕົວຢ່າງ: Xar_123</div>
-          <input type="text" id="vjCustomIdPreview" readonly style="font-weight:800;color:var(--gold-dark)"/>
+          <div class="field-hint">ຊື່ ຕາມດ້ວຍເບີໂທ 3 ໂຕທ້າຍ ຕົວຢ່າງ: Xar_123 (ແກ້ໄຂໄດ້ຕາມໃຈ)</div>
+          <input type="text" id="vjCustomIdPreview" oninput="onCustomIdEdited()" style="font-weight:800;color:var(--gold-dark);background:var(--white)"/>
           <button class="ac-btn ac-btn-pass" style="margin-top:6px" onclick="copyCustomId()">📋 Copy ໄອດີໂຕເອງ</button>
         </div>
 
@@ -1712,13 +1712,22 @@ function renderStatusSteps(currentStep) {
 let vjPhotoBase64 = "";
 let vjPhotoMime = "";
 
+let customIdManuallyEdited = false;
+
 function updateVjIdPreview() {
   const name = document.getElementById('vjNameInput').value.trim();
   const phone = document.getElementById('vjPhone').value.trim().replace(/\D/g,'');
   const last3 = phone.slice(-3) || '000';
   document.getElementById('vjBigoNamePreview').value = name ? `🅔Ⓜ︎🅾︎ ${name}` : '';
-  document.getElementById('vjCustomIdPreview').value = name ? `${name}_${last3}` : '';
+  if (!customIdManuallyEdited) {
+    document.getElementById('vjCustomIdPreview').value = name ? `${name}_${last3}` : '';
+  }
 }
+
+function onCustomIdEdited() {
+  customIdManuallyEdited = true;
+}
+
 document.getElementById('vjPhone').addEventListener('input', updateVjIdPreview);
 
 function copyBigoName() {
@@ -1812,6 +1821,7 @@ function resetVjForm() {
   document.getElementById('vjPhotoPreview').src = '';
   vjPhotoBase64 = '';
   vjPhotoMime = '';
+  customIdManuallyEdited = false;
 }
 
 /* ══════════ CASTING PAGE ══════════ */
