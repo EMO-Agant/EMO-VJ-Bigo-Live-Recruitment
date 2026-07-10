@@ -1060,9 +1060,9 @@ body {
         <h4>📱 ວິທີຕິດຕາມ ລໍຖ້າ</h4>
         <ol>
           <li>ດາວໂຫຼດ Bigo Live ຈາກ App Store ຫຼື Play Store</li>
-          <li>ຕິດຕາມ ແລະ ເຊັນ-ໃນ ໃຫ້ ລໍຖ້າ ທີ່ EMO ເຊັນ-ຈາກ Bigo</li>
-          <li>ຊ່ວຍ ຕ້ອງ ຕໍ່ Acc ສ່ວນຕົວ ຢ່າງ ລ​ ຊ​ ໄດ້ ໃຫ້ ທ່ານ</li>
-          <li>ຊ​ ຊ​ ຊ​ ຊ​ ກ​ ໃຫ້ ທ​ ໄດ້</li>
+          <li>ຕິດຕາມ ແລະ ລໍຖ້າ ຈາກ Bigo ອານຸມັດ</li>
+          <li>ແອັດມິນຈະສົ່ງແຈ້ງໃນລະບົບໃຫ້ຮັບຮູ້</li>
+          <li>ມີບັນຫາຕິດຂັດສົ່ງຫາແອັດມິນທີ່ເບີ WhatsApp ໄດ້ເລີຍ</li>
         </ol>
       </div>
       <div class="form-section">
@@ -1078,8 +1078,8 @@ body {
             </select>
           </div>
           <div class="field">
-            <label>Bigo ID (ຖ້າມີ)</label>
-            <div class="field-hint">ຕິດຕາມ ID: EMO_PHONE ໄວ</div>
+            <label>Bigo ID (ໃສ່ຊື່ຫຼິ້ນເປັນ ພາສາອັງກິດ)</label>
+            <div class="field-hint">ເພື່ອຕັ້ງຊື່ໄອດີ</div>
             <input type="text" id="bigoId" placeholder="Bigo ID ຂອງທ່ານ"/>
           </div>
           <div style="background:var(--off-white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
@@ -1580,8 +1580,13 @@ function onSubmitSuccess(seq) {
   document.getElementById('seqDisplay').textContent = '#' + String(seq).padStart(3,'0');
   document.getElementById('formWrapper').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
-  showToast('🎉 ສະໝັກສຳເລັດ!', true);
-  setTimeout(() => { goPage('status'); }, 2000); // ← ເພີ່ມແຖວນີ້
+  showToast('🎉 ສະໝັກສຳເລັດ! ກະລຸນາຕັ້ງຊື່ VJ ແລະ ອັບຮູບຕໍ່', true);
+  const submittedPhone = document.getElementById('phone').value.trim();
+  setTimeout(() => {
+    goPage('vjid');
+    document.getElementById('vjPhone').value = submittedPhone;
+    updateVjIdPreview();
+  }, 2000);
 }
 
 /* ══════════════════════════════════════════════
@@ -1711,7 +1716,7 @@ function updateVjIdPreview() {
   const name = document.getElementById('vjNameInput').value.trim();
   const phone = document.getElementById('vjPhone').value.trim().replace(/\D/g,'');
   const last3 = phone.slice(-3) || '000';
-  document.getElementById('vjBigoNamePreview').value = name ? `🅔Ⓜ︎🅾︎${name}` : '';
+  document.getElementById('vjBigoNamePreview').value = name ? `🅔Ⓜ︎🅾︎ ${name}` : '';
   document.getElementById('vjCustomIdPreview').value = name ? `${name}_${last3}` : '';
 }
 document.getElementById('vjPhone').addEventListener('input', updateVjIdPreview);
@@ -1771,6 +1776,7 @@ function saveVjInfoSubmit() {
   const bigoFullName = document.getElementById('vjBigoNamePreview').value.trim();
   const vjId = document.getElementById('vjCustomIdPreview').value.trim();
   if (!phone || !name) { showToast('❌ ກະລຸນາໃສ່ເບີໂທ ແລະ ຊື່'); return; }
+  if (!vjPhotoBase64) { showToast('❌ ກະລຸນາອັບໂຫລດຮູບຂອງທ່ານກ່ອນບັນທຶກ'); return; }
 
   showSpinner(true);
   callAPI("saveVjInfo", {
